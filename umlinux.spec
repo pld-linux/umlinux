@@ -7,22 +7,28 @@ Release:	1
 Epoch:		0
 License:	GPL
 Group:		Aplications/Dupa
-Source0:	linux-%{kernel_version}.tar.bz2
+Source0:	ftp://ftp.kernel.org/pub/linux/kernel/v2.4/linux-%{kernel_version}.tar.bz2
 Source1:	umlinux-config
-Patch0:		uml-patch-%{kernel_version}-%{version}.bz2 
-URL:		http://ftp.sourceforge.org/uml 
+Patch0:		ftp://ftp.sourceforge.net/pub/sourceforge/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
+URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%description
+User Mode Linux.
+
+%description -l pl
+Linux w przestrzeni u¿ytkownika.
 
 %package modules
 Summary:	User Mode Linux modules
+Summary(pl):	Modu³y Linuksa w przestrzeni u¿ytkownika
 Group:		Aplications/Dupa
 
-%description
-User Mode Linux 
-
 %description modules
-Modules for User Mode Linux
+Modules for User Mode Linux.
+
+%description modules -l pl
+Modu³y Linuksa w przestrzeni u¿ytkownika.
 
 %prep
 %setup  -q -n linux
