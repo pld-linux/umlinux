@@ -73,9 +73,10 @@ Utilities for automagic startup/shutdown User Mode Linux.
 Automagiczy start/stop Linuksa w przestrzeni u¿ytkownika.
 
 %prep
-%setup  -q -n linux -a 2 -a 3
+%setup  -q -n linux -a 2
 %patch0 -p1
 cp %{SOURCE1} ./.config
+cp %{SOURCE3} .
 
 %build
 %{__make} ARCH=um oldconfig
