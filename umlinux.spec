@@ -10,11 +10,11 @@ License:	GPL
 Group:		Applications/Emulators
 Source0:	ftp://ftp.kernel.org/pub/linux/kernel/v2.4/linux-%{kernel_version}.tar.bz2
 Source1:	%{name}-config
-Source2:	ftp://ftp.sourceforge.net/pub/sourceforge/user-mode-linux/uml_utilities_%{utils_version}.tar.bz2
+Source2:	http://dl.sourceforge.net/user-mode-linux/uml_utilities_%{utils_version}.tar.bz2
 Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
 Source4:	%{name}-etc-umltab
 Source5:	%{name}-rc-init
-Patch0:		ftp://ftp.sourceforge.net/pub/sourceforge/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
+Patch0:		http://dl.sourceforge.net/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -38,25 +38,25 @@ Modu³y Linuksa w przestrzeni u¿ytkownika.
 
 %package utils
 Summary:	User Mode Linux Utilities
-Summary(pl):	Narzêdzia Perl dla Linuksa w przestrzeni u¿ytkownika
+Summary(pl):	Narzêdzia dla Linuksa w przestrzeni u¿ytkownika
 Group:		Applications/Emulators
 
 %description utils
 Utilities for User Mode Linux.
 
 %description utils -l pl
-Narzêdzia do Linuksa w przestrzeni u¿ytkownika.
+Narzêdzia dla Linuksa w przestrzeni u¿ytkownika.
 
 %package utils-perl
-Summary:    User Mode Linux Perl Utilities
-Summary(pl):    Narzêdzia  dla Linuksa w przestrzeni u¿ytkownika
-Group:      Applications/Emulators
+Summary:	User Mode Linux Perl Utilities
+Summary(pl):	Narzêdzia perlowe dla Linuksa w przestrzeni u¿ytkownika
+Group:		Applications/Emulators
 
 %description utils-perl
 Perl Utilities for User Mode Linux.
 
 %description utils-perl -l pl
-Narzêdzia Perl do Linuksa w przestrzeni u¿ytkownika.
+Narzêdzia perlowe dla Linuksa w przestrzeni u¿ytkownika.
 
 %package init
 Summary:	Automagic startup/shutdown User Mode Linux
@@ -68,7 +68,6 @@ Utilities for automagic startup/shutdown User Mode Linux.
 
 %description init -l pl
 Automagiczy start/stop Linuksa w przestrzeni u¿ytkownika.
-
 
 %prep
 %setup  -q -n linux -a 2 -a 3
@@ -90,7 +89,6 @@ install -d ${RPM_BUILD_ROOT}etc/rc.d/init.d/
 install %{SOURCE4} ${RPM_BUILD_ROOT}etc/umltab
 install %{SOURCE5} ${RPM_BUILD_ROOT}etc/rc.d/init.d/uml
 
-
 %{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
 install linux  ${RPM_BUILD_ROOT}%{_bindir}/umlinux
 install tools/moo/uml_moo $RPM_BUILD_ROOT%{_bindir}
@@ -106,13 +104,12 @@ install tools/honeypot/honeypot.pl $RPM_BUILD_ROOT%{_bindir}
 # install tools/honeypot/hppfslib.pm ?
 # install tools/honeypot/hppfs.pm ?
 
-%doc *.html
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%doc *.html
 %attr(755,root,root) %{_bindir}/umlinux
 
 %files utils
