@@ -1,24 +1,25 @@
-%define kernel_version 2.4.18
+%define kernel_version 2.4.23
 %define utils_version 20020906
 Summary:	User Mode Linux
 Summary(pl):	Linux w przestrzeni u¿ytkownika
 Name:		umlinux
-Version:	18
+Version:	1
 Release:	1
 Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
 Source0:	ftp://ftp.kernel.org/pub/linux/kernel/v2.4/linux-%{kernel_version}.tar.bz2
-# Source0-md5:	ad92859baaa837847b34d842b9f39d38
+# Source0-md5:	642af5ab5e1fc63685fde85e9ae601e4
 Source1:	%{name}-config
 Source2:	http://dl.sourceforge.net/user-mode-linux/uml_utilities_%{utils_version}.tar.bz2
 # Source2-md5:	b80882c61ee8557658675a46fe91cea1
 Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
-# Source3-md5:	17408fa85d733cc43034f3d21bca716e
+# Source3-md5:	781dc3611ebf60ac07814a1cd31c936d
 Source4:	%{name}-etc-umltab
 Source5:	%{name}-rc-init
 Patch0:		http://dl.sourceforge.net/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
 URL:		http://user-mode-linux.sourceforge.net/
+BuildRequires:	libpcap-static
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -73,7 +74,7 @@ Utilities for automagic startup/shutdown User Mode Linux.
 Automagiczy start/stop Linuksa w przestrzeni u¿ytkownika.
 
 %prep
-%setup  -q -n linux -a 2
+%setup  -q -n linux-%{kernel_version} -a 2
 %patch0 -p1
 cp %{SOURCE1} ./.config
 cp %{SOURCE3} .
@@ -81,7 +82,8 @@ cp %{SOURCE3} .
 %build
 %{__make} ARCH=um oldconfig
 %{__make} ARCH=um dep
-%{__make} ARCH=um linux
+# $((0x... )) it's not /bin/sh compatible:
+%{__make} ARCH=um SHELL=/bin/bash linux
 %{__make} ARCH=um modules
 cd tools
 %{__make}
@@ -89,9 +91,9 @@ cd tools
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d ${RPM_BUILD_ROOT}%{_bindir}
-install -d ${RPM_BUILD_ROOT}etc/rc.d/init.d/
-install %{SOURCE4} ${RPM_BUILD_ROOT}etc/umltab
-install %{SOURCE5} ${RPM_BUILD_ROOT}etc/rc.d/init.d/uml
+install -d ${RPM_BUILD_ROOT}/etc/rc.d/init.d/
+install %{SOURCE4} ${RPM_BUILD_ROOT}/etc/umltab
+install %{SOURCE5} ${RPM_BUILD_ROOT}/etc/rc.d/init.d/uml
 
 %{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
 install linux  ${RPM_BUILD_ROOT}%{_bindir}/umlinux
