@@ -1,6 +1,6 @@
 %define kernel_version 2.4.18
 Summary:	User Mode Linux
-Summary(pl):	Linux w przestrzeni urzytkownika
+Summary(pl):	Linux w przestrzeni u¿ytkownika
 Name:		umlinux
 Version:	18
 Release:	1
