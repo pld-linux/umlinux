@@ -1,18 +1,18 @@
-%define kernel_version 2.4.23
-%define utils_version 20020906
+%define kernel_version 2.4.24
+%define utils_version 20040406
 Summary:	User Mode Linux
 Summary(pl):	Linux w przestrzeni u¿ytkownika
 Name:		umlinux
-Version:	1
+Version:	2
 Release:	1
 Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
 Source0:	ftp://ftp.kernel.org/pub/linux/kernel/v2.4/linux-%{kernel_version}.tar.bz2
-# Source0-md5:	642af5ab5e1fc63685fde85e9ae601e4
+# Source0-md5:	1e055c42921b2396a559d84df4c3d9aa
 Source1:	%{name}-config
 Source2:	http://dl.sourceforge.net/user-mode-linux/uml_utilities_%{utils_version}.tar.bz2
-# Source2-md5:	b80882c61ee8557658675a46fe91cea1
+# Source2-md5:	2c1ccd9efacbfb39e42d482b89b2550a
 Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
 # Source3-md5:	781dc3611ebf60ac07814a1cd31c936d
 Source4:	%{name}-etc-umltab
