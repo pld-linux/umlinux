@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# start/stop virtual user-mode-linux hosts
+
+TAPDEV=tap0
+TAPNET=192.168.0.0/24
+MYIF=eth0
+MYIP=192.168.0.1
+ETHTAP=0
+HALTTEXT=cad
+UMLCONS=/usr/bin/uml_mconsole
+
+mount none /devfs -t devfs
+modprobe tun
+rm -f /dev/net
+ln -s /devfs/misc/net/ /dev/net
+chown root.tap /dev/net/tun
+chmod g+w /dev/net/tun
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+case "$1" in
+    start)
+    cat /etc/umltab |\
+    sed 's/#.*//' |\
+    while read TAPDEV VIP USER HISKERNEL HISPATH HISMAC UMID; do
+	[ -z "$TAPDEV" ] && continue
+	echo Setting up: $TAPDEV:$VIP:$USER:$HISKERNEL:$HISPATH:$HISMAC:$UMID
+	ETHTAP="$(( $LOOPNO + 1 ))"
+	rmmod ethercap$ETHTAP
+	tunctl -d $TAPDEV -f /devfs/misc/net/tun
+	tunctl -u $USER -f /devfs/misc/net/tun
+	insmod ethertap unit=$ETHTAP -o ethertap$ETHTAP
+	echo 1 > /proc/sys/net/ipv4/conf/$TAPDEV/proxy_arp
+	ifconfig $TAPDEV $MYIP up
+	route del -net $TAPNET dev $TAPDEV
+	route add -host $VIP dev $TAPDEV
+	arp -Ds $VIP $MYIF pub
+	su - $USER -c "(cd $HISPATH && $HISKERNEL eth0=tuntap,$TAPDEV,$HISMAC,$VIP umid=puppy con0=tty:/dev/tty9 ssl0=tty:/dev/ttyp0 ssl1=pty) &"
+    done
+    exit 0
+    ;;
+    stop)
+    ETHTAP=0
+    cat /etc/umltab |\
+    sed 's/#.*//' |\
+    while read TAPDEV VIP USER HISKERNEL HISPATH HISMAC UMID; do
+	[ -z "$TAPDEV" ] && continue
+	ETHTAP="$(( $LOOPNO + 1 ))"
+	echo Shutdown: $TAPDEV:$VIP:$USER:$HISKERNEL:$HISPATH:$HISMAC:$UMID
+	su - $USER -c "echo "$HALTTEXT" | $UMLCONS $UMID"
+	rmmod ethercap$ETHTAP
+	tunctl -d $TAPDEV -f /devfs/misc/net/tun
+	#tunctl -u $USER -f /devfs/misc/net/tun
+	route del -host $VIP dev $TAPDEV
+	ifconfig $TAPDEV down 
+	rmmod ethertap$ETHTAP
+	arp -d $VIP 
+    done	   
+    exit 0
+    ;;	 
+    *)
+    echo "$0 {start|stop|status}"
+    exit 1
+esac
+
+# This must be last line !
+# vi:syntax=sh:tw=138:ts=8:sw=4
