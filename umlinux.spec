@@ -140,5 +140,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %files init
 %defattr(644,root,root,755)
-%attr(755,root,root) /etc/rc.d/init.d/uml
+%attr(754,root,root) /etc/rc.d/init.d/uml
 /etc/umltab
