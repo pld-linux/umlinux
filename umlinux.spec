@@ -4,7 +4,7 @@ Summary:	User Mode Linux
 Summary(pl):	Linux w przestrzeni u¿ytkownika
 Name:		umlinux
 Version:	2
-Release:	1
+Release:	1.1
 Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
