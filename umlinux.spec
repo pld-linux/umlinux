@@ -12,8 +12,8 @@ Source0:	ftp://ftp.kernel.org/pub/linux/kernel/v2.4/linux-%{kernel_version}.tar.
 Source1:	%{name}-config
 Source2:	ftp://ftp.sourceforge.net/pub/sourceforge/user-mode-linux/uml_utilities_%{utils_version}.tar.bz2
 Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
-Source4:    %{name}-etc-umltab
-Source5:    %{name}-rc-init
+Source4:	%{name}-etc-umltab
+Source5:	%{name}-rc-init
 Patch0:		ftp://ftp.sourceforge.net/pub/sourceforge/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
