@@ -60,7 +60,7 @@ Narzêdzia Perl do Linuksa w przestrzeni u¿ytkownika.
 
 %package init
 Summary:	Automagic startup/shutdown User Mode Linux
-Summary(pl):	Automagiczy start/stop Linuksa w przestrzeni u¿ytkownika 
+Summary(pl):	Automagiczy start/stop Linuksa w przestrzeni u¿ytkownika
 Group:		Applications/Emulators
 
 %description init
