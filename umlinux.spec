@@ -9,9 +9,12 @@ Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
 Source0:	ftp://ftp.kernel.org/pub/linux/kernel/v2.4/linux-%{kernel_version}.tar.bz2
+# Source0-md5:	ad92859baaa837847b34d842b9f39d38
 Source1:	%{name}-config
 Source2:	http://dl.sourceforge.net/user-mode-linux/uml_utilities_%{utils_version}.tar.bz2
+# Source2-md5:	b80882c61ee8557658675a46fe91cea1
 Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
+# Source3-md5:	17408fa85d733cc43034f3d21bca716e
 Source4:	%{name}-etc-umltab
 Source5:	%{name}-rc-init
 Patch0:		http://dl.sourceforge.net/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
