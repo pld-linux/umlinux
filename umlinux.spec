@@ -85,18 +85,16 @@ cp %{SOURCE3} .
 # $((0x... )) it's not /bin/sh compatible:
 %{__make} ARCH=um SHELL=/bin/bash linux
 %{__make} ARCH=um modules
-cd tools
-%{__make}
+%{__make} -C tools
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d ${RPM_BUILD_ROOT}%{_bindir}
-install -d ${RPM_BUILD_ROOT}/etc/rc.d/init.d/
-install %{SOURCE4} ${RPM_BUILD_ROOT}/etc/umltab
-install %{SOURCE5} ${RPM_BUILD_ROOT}/etc/rc.d/init.d/uml
+install -d $RPM_BUILD_ROOT{%{_bindir},/etc/rc.d/init.d}
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/umltab
+install %{SOURCE5} $RPM_BUILD_ROOT/etc/rc.d/init.d/uml
 
 %{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
-install linux  ${RPM_BUILD_ROOT}%{_bindir}/umlinux
+install linux  $RPM_BUILD_ROOT%{_bindir}/umlinux
 install tools/moo/uml_moo $RPM_BUILD_ROOT%{_bindir}
 install tools/umlgdb/umlgdb $RPM_BUILD_ROOT%{_bindir}
 install tools/port-helper/port-helper $RPM_BUILD_ROOT%{_bindir}
