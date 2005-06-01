@@ -20,6 +20,7 @@ Source5:	%{name}-rc-init
 Patch0:		http://dl.sourceforge.net/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRequires:	libpcap-static
+BuildRequires:	modutils
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
