@@ -4,7 +4,7 @@ Summary:	User Mode Linux
 Summary(pl):	Linux w przestrzeni u¿ytkownika
 Name:		umlinux
 Version:	2
-Release:	1.1
+Release:	1.2
 Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
@@ -18,6 +18,7 @@ Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
 Source4:	%{name}-etc-umltab
 Source5:	%{name}-rc-init
 Patch0:		http://dl.sourceforge.net/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
+Patch1:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-apps/usermode-utilities/files/20040406-CAN-2004-1295.patch
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRequires:	libpcap-static
 BuildRequires:	modutils
@@ -77,6 +78,9 @@ Automagiczy start/stop Linuksa w przestrzeni u¿ytkownika.
 %prep
 %setup  -q -n linux-%{kernel_version} -a 2
 %patch0 -p1
+cd tools
+%patch1 -p1
+cd ..
 cp %{SOURCE1} ./.config
 cp %{SOURCE3} .
 
