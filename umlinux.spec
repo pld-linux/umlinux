@@ -1,15 +1,15 @@
-%define kernel_version 2.4.24
+%define kernel_version 2.4.27
 %define utils_version 20040406
 Summary:	User Mode Linux
 Summary(pl):	Linux w przestrzeni u¿ytkownika
 Name:		umlinux
 Version:	2
-Release:	1.2
+Release:	1.%{kernel_version}.1
 Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
 Source0:	ftp://ftp.kernel.org/pub/linux/kernel/v2.4/linux-%{kernel_version}.tar.bz2
-# Source0-md5:	1e055c42921b2396a559d84df4c3d9aa
+# Source0-md5:	59a2e6fde1d110e2ffa20351ac8b4d9e
 Source1:	%{name}-config
 Source2:	http://dl.sourceforge.net/user-mode-linux/uml_utilities_%{utils_version}.tar.bz2
 # Source2-md5:	2c1ccd9efacbfb39e42d482b89b2550a
@@ -17,8 +17,24 @@ Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
 # Source3-md5:	781dc3611ebf60ac07814a1cd31c936d
 Source4:	%{name}-etc-umltab
 Source5:	%{name}-rc-init
-Patch0:		http://dl.sourceforge.net/user-mode-linux/uml-patch-%{kernel_version}-%{version}.bz2
+Patch0:		http://dl.sourceforge.net/user-mode-linux/uml-patch-%{kernel_version}-1.bz2
 Patch1:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-apps/usermode-utilities/files/20040406-CAN-2004-1295.patch
+Patch2:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.smbfs.patch
+Patch3:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.CAN-2004-1056.patch
+Patch4:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources.AF_UNIX.patch
+Patch5:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.binfmt_elf.patch
+Patch6:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.XDRWrapFix.patch
+Patch7:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.78362.patch
+Patch8:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.77666.patch
+Patch9:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.77094.patch
+Patch10:	ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.27.CAN-2004-1295.patch
+Patch11:	ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.78363.patch
+Patch12:	ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.CAN-2004-1137.patch
+Patch13:	ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.CAN-2004-1016.patch
+Patch14:	ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.binfmt_a.out.patch
+Patch15:	ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.brk-locked.patch
+Patch16:	ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.cmdlineLeak.patch
+Patch17:	ftp://ftp.linux.ee/pub/gentoo/portage/sys-kernel/usermode-sources/files/usermode-sources-2.4.vma.patch
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRequires:	libpcap-static
 BuildRequires:	modutils
@@ -46,6 +62,7 @@ Modu³y Linuksa w przestrzeni u¿ytkownika.
 Summary:	User Mode Linux Utilities
 Summary(pl):	Narzêdzia dla Linuksa w przestrzeni u¿ytkownika
 Group:		Applications/Emulators
+Version:	%{utils_version}
 
 %description utils
 Utilities for User Mode Linux.
@@ -57,6 +74,7 @@ Narzêdzia dla Linuksa w przestrzeni u¿ytkownika.
 Summary:	User Mode Linux Perl Utilities
 Summary(pl):	Narzêdzia perlowe dla Linuksa w przestrzeni u¿ytkownika
 Group:		Applications/Emulators
+Version:	%{utils_version}
 
 %description utils-perl
 Perl Utilities for User Mode Linux.
@@ -81,6 +99,23 @@ Automagiczy start/stop Linuksa w przestrzeni u¿ytkownika.
 cd tools
 %patch1 -p1
 cd ..
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+
 cp %{SOURCE1} ./.config
 cp %{SOURCE3} .
 
