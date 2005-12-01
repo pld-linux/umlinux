@@ -15,7 +15,7 @@ Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
 Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{kernel_version}.tar.bz2
-# Source0-md5:	971d541176438154f947705d7c5b77cd
+# Source0-md5:	542d5aa1657f8da60b41d4d08b098841
 Source1:	%{name}-config
 Source2:	http://dl.sourceforge.net/user-mode-linux/uml_utilities_%{utils_version}.tar.bz2
 # Source2-md5:	2c1ccd9efacbfb39e42d482b89b2550a
