@@ -1,7 +1,7 @@
 %define kernel_version 2.4.27
 %define utils_version 20040406
 Summary:	User Mode Linux
-Summary(pl.UTF-8):   Linux w przestrzeni użytkownika
+Summary(pl.UTF-8):	Linux w przestrzeni użytkownika
 Name:		umlinux
 Version:	2
 Release:	1.%{kernel_version}.1
@@ -48,7 +48,7 @@ Linux w przestrzeni użytkownika.
 
 %package modules
 Summary:	User Mode Linux modules
-Summary(pl.UTF-8):   Moduły Linuksa w przestrzeni użytkownika
+Summary(pl.UTF-8):	Moduły Linuksa w przestrzeni użytkownika
 Group:		Applications/Emulators
 
 %description modules
@@ -60,7 +60,7 @@ Moduły Linuksa w przestrzeni użytkownika.
 
 %package utils
 Summary:	User Mode Linux Utilities
-Summary(pl.UTF-8):   Narzędzia dla Linuksa w przestrzeni użytkownika
+Summary(pl.UTF-8):	Narzędzia dla Linuksa w przestrzeni użytkownika
 Group:		Applications/Emulators
 Version:	%{utils_version}
 
@@ -72,7 +72,7 @@ Narzędzia dla Linuksa w przestrzeni użytkownika.
 
 %package utils-perl
 Summary:	User Mode Linux Perl Utilities
-Summary(pl.UTF-8):   Narzędzia perlowe dla Linuksa w przestrzeni użytkownika
+Summary(pl.UTF-8):	Narzędzia perlowe dla Linuksa w przestrzeni użytkownika
 Group:		Applications/Emulators
 Version:	%{utils_version}
 
@@ -84,7 +84,7 @@ Narzędzia perlowe dla Linuksa w przestrzeni użytkownika.
 
 %package init
 Summary:	Automagic startup/shutdown User Mode Linux
-Summary(pl.UTF-8):   Automagiczy start/stop Linuksa w przestrzeni użytkownika
+Summary(pl.UTF-8):	Automagiczy start/stop Linuksa w przestrzeni użytkownika
 Group:		Applications/Emulators
 
 %description init
