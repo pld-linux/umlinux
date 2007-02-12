@@ -7,7 +7,7 @@
 #%define	skas_patch 2.6.11-v9-pre2
 %define	skas_patch 2.6.12-rc4-v9-pre2
 Summary:	User Mode Linux
-Summary(pl):	Linux w przestrzeni uøytkownika
+Summary(pl.UTF-8):   Linux w przestrzeni u≈ºytkownika
 Name:		umlinux
 Version:	2
 Release:	1.1
@@ -35,52 +35,52 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 User Mode Linux.
 
-%description -l pl
-Linux w przestrzeni uøytkownika.
+%description -l pl.UTF-8
+Linux w przestrzeni u≈ºytkownika.
 
 %package modules
 Summary:	User Mode Linux modules
-Summary(pl):	Modu≥y Linuksa w przestrzeni uøytkownika
+Summary(pl.UTF-8):   Modu≈Çy Linuksa w przestrzeni u≈ºytkownika
 Group:		Applications/Emulators
 
 %description modules
 Modules for User Mode Linux.
 
-%description modules -l pl
-Modu≥y Linuksa w przestrzeni uøytkownika.
+%description modules -l pl.UTF-8
+Modu≈Çy Linuksa w przestrzeni u≈ºytkownika.
 
 %package utils
 Summary:	User Mode Linux Utilities
-Summary(pl):	NarzÍdzia dla Linuksa w przestrzeni uøytkownika
+Summary(pl.UTF-8):   Narzƒôdzia dla Linuksa w przestrzeni u≈ºytkownika
 Group:		Applications/Emulators
 
 %description utils
 Utilities for User Mode Linux.
 
-%description utils -l pl
-NarzÍdzia dla Linuksa w przestrzeni uøytkownika.
+%description utils -l pl.UTF-8
+Narzƒôdzia dla Linuksa w przestrzeni u≈ºytkownika.
 
 %package utils-perl
 Summary:	User Mode Linux Perl Utilities
-Summary(pl):	NarzÍdzia perlowe dla Linuksa w przestrzeni uøytkownika
+Summary(pl.UTF-8):   Narzƒôdzia perlowe dla Linuksa w przestrzeni u≈ºytkownika
 Group:		Applications/Emulators
 
 %description utils-perl
 Perl Utilities for User Mode Linux.
 
-%description utils-perl -l pl
-NarzÍdzia perlowe dla Linuksa w przestrzeni uøytkownika.
+%description utils-perl -l pl.UTF-8
+Narzƒôdzia perlowe dla Linuksa w przestrzeni u≈ºytkownika.
 
 %package init
 Summary:	Automagic startup/shutdown User Mode Linux
-Summary(pl):	Automagiczy start/stop Linuksa w przestrzeni uøytkownika
+Summary(pl.UTF-8):   Automagiczy start/stop Linuksa w przestrzeni u≈ºytkownika
 Group:		Applications/Emulators
 
 %description init
 Utilities for automagic startup/shutdown User Mode Linux.
 
-%description init -l pl
-Automagiczy start/stop Linuksa w przestrzeni uøytkownika.
+%description init -l pl.UTF-8
+Automagiczy start/stop Linuksa w przestrzeni u≈ºytkownika.
 
 %prep
 %setup  -q -n linux-%{kernel_version} -a 2
