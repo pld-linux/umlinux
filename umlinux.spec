@@ -70,6 +70,8 @@ install -d $RPM_BUILD_ROOT{%{_bindir},/etc/rc.d/init.d}
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/umltab
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/rc.d/init.d/uml
 
+cd linux-%{basever}
+install linux $RPM_BUILD_ROOT%{_bindir}/linux
 %{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
 
 %clean
@@ -77,12 +79,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.html
-%attr(755,root,root) %{_bindir}/umlinux
+%doc linux-%{basever}/UserModeLinux-HOWTO.html
+%attr(755,root,root) %{_bindir}/linux
 
 %files modules
 %defattr(644,root,root,755)
-/lib/*
+/lib/modules/%{basever}%{postver}
 
 %files init
 %defattr(644,root,root,755)
