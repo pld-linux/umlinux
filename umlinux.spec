@@ -18,9 +18,6 @@ Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
 Source4:	%{name}-etc-umltab
 Source5:	%{name}-rc-init
 URL:		http://user-mode-linux.sourceforge.net/
-BuildRequires:	libpcap-static
-BuildRequires:	modutils
-BuildRequires:	readline-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -59,14 +56,13 @@ cd linux-%{basever}
 %{__bzip2} -dc %{SOURCE1} | %{__patch} -p1 -s
 %endif
 
-cp %{SOURCE1} ./.config
+cp %{SOURCE2} ./.config
 cp %{SOURCE3} .
 
 %build
-%{__make} ARCH=um oldconfig
-# $((0x... )) it's not /bin/sh compatible:
-%{__make} ARCH=um SHELL=/bin/bash linux
-%{__make} ARCH=um modules
+cd linux-%{basever}
+#%{__make} ARCH=um oldconfig
+%{__make} ARCH=um LDFLAGS=-L/lib
 
 %install
 rm -rf $RPM_BUILD_ROOT
