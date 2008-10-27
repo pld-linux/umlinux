@@ -21,8 +21,7 @@ Source2:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
 Source3:	%{name}-etc-umltab
 Source4:	%{name}-rc-init
 Patch0:		http://www.user-mode-linux.org/~blaisorblade/patches/guest/uml-%{uml_patch}/uml-%{uml_patch}.patch.bz2
-Patch1:		ftp://ftp.linux.ee/pub/gentoo/portage/sys-apps/usermode-utilities/files/20040406-CAN-2004-1295.patch
-Patch2:		http://www.user-mode-linux.org/~blaisorblade/patches/skas3-2.6/skas-%{skas_patch}/skas-%{skas_patch}.patch.bz2
+Patch1:		http://www.user-mode-linux.org/~blaisorblade/patches/skas3-2.6/skas-%{skas_patch}/skas-%{skas_patch}.patch.bz2
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRequires:	libpcap-static
 BuildRequires:	modutils
@@ -60,10 +59,7 @@ Automagiczy start/stop Linuksa w przestrzeni użytkownika.
 %prep
 %setup  -q -n linux-%{kernel_version}
 #%patch0 -p1
-cd tools
-%patch1 -p1
-cd ..
-#patch2 -p1
+#patch1 -p1
 
 cp %{SOURCE1} ./.config
 cp %{SOURCE2} .
