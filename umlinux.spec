@@ -1,27 +1,22 @@
-#%define kernel_version 2.6.11.1
-%define kernel_version 2.6.12.1
-%define	uml_patch 2.6.11.8-bs6
-#%define	uml_patch 2.6.11.8-bs5
-#%define	uml_patch 2.6.11-bs4
-#%define	skas_patch 2.6.11-v9-pre2
-%define	skas_patch 2.6.12-rc4-v9-pre2
+%define basever 2.6.27
+%define postver .3
 Summary:	User Mode Linux
-Summary(pl.UTF-8):   Linux w przestrzeni użytkownika
+Summary(pl.UTF-8):	Linux w przestrzeni użytkownika
 Name:		umlinux
-Version:	2
-Release:	1.1
+Version:	%{basever}%{postver}
+Release:	0.1
 Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
-Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{kernel_version}.tar.bz2
-# Source0-md5:	542d5aa1657f8da60b41d4d08b098841
-Source1:	%{name}-config
-Source2:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
-# Source2-md5:	781dc3611ebf60ac07814a1cd31c936d
-Source3:	%{name}-etc-umltab
-Source4:	%{name}-rc-init
-Patch0:		http://www.user-mode-linux.org/~blaisorblade/patches/guest/uml-%{uml_patch}/uml-%{uml_patch}.patch.bz2
-Patch1:		http://www.user-mode-linux.org/~blaisorblade/patches/skas3-2.6/skas-%{skas_patch}/skas-%{skas_patch}.patch.bz2
+Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{basever}.tar.bz2
+# Source0-md5:  b3e78977aa79d3754cb7f8143d7ddabd
+Source1:	http://www.kernel.org/pub/linux/kernel/v2.6/patch-%{version}.bz2
+# Source1-md5:  4f0dc89b4989619c616d40507b5f7f34
+Source2:	%{name}-config
+Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
+# Source3-md5:	781dc3611ebf60ac07814a1cd31c936d
+Source4:	%{name}-etc-umltab
+Source5:	%{name}-rc-init
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRequires:	libpcap-static
 BuildRequires:	modutils
@@ -36,7 +31,7 @@ Linux w przestrzeni użytkownika.
 
 %package modules
 Summary:	User Mode Linux modules
-Summary(pl.UTF-8):   Moduły Linuksa w przestrzeni użytkownika
+Summary(pl.UTF-8):	Moduły Linuksa w przestrzeni użytkownika
 Group:		Applications/Emulators
 
 %description modules
@@ -47,7 +42,7 @@ Moduły Linuksa w przestrzeni użytkownika.
 
 %package init
 Summary:	Automagic startup/shutdown User Mode Linux
-Summary(pl.UTF-8):   Automagiczy start/stop Linuksa w przestrzeni użytkownika
+Summary(pl.UTF-8):	Automagiczy start/stop Linuksa w przestrzeni użytkownika
 Group:		Applications/Emulators
 
 %description init
@@ -57,12 +52,15 @@ Utilities for automagic startup/shutdown User Mode Linux.
 Automagiczy start/stop Linuksa w przestrzeni użytkownika.
 
 %prep
-%setup  -q -n linux-%{kernel_version}
-#%patch0 -p1
-#patch1 -p1
+%setup -qc
+
+cd linux-%{basever}
+%if "%{postver}" != "%{nil}"
+%{__bzip2} -dc %{SOURCE1} | %{__patch} -p1 -s
+%endif
 
 cp %{SOURCE1} ./.config
-cp %{SOURCE2} .
+cp %{SOURCE3} .
 
 %build
 %{__make} ARCH=um oldconfig
@@ -73,8 +71,8 @@ cp %{SOURCE2} .
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},/etc/rc.d/init.d}
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/umltab
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/uml
+install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/umltab
+install %{SOURCE5} $RPM_BUILD_ROOT/etc/rc.d/init.d/uml
 
 %{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
 
@@ -93,4 +91,4 @@ rm -rf $RPM_BUILD_ROOT
 %files init
 %defattr(644,root,root,755)
 %attr(754,root,root) /etc/rc.d/init.d/uml
-/etc/umltab
+%{_sysconfdir}/umltab
