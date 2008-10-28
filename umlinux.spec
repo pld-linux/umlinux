@@ -74,6 +74,12 @@ cd linux-%{basever}
 install linux $RPM_BUILD_ROOT%{_bindir}/linux
 %{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
 
+%post modules
+%depmod %{version}
+
+%postun modules
+%depmod %{version}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
