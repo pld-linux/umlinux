@@ -203,6 +203,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(754,root,root) /etc/rc.d/init.d/uml
 %{_sysconfdir}/umltab
 
-# %files doc
-# %defattr(644,root,root,755)
-# %{_prefix}/src/linux-%{version}/Documentation
+%if 0
+%files doc
+%defattr(644,root,root,755)
+%{_prefix}/src/linux-%{version}/Documentation
+%endif
