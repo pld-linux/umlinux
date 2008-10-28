@@ -1,5 +1,6 @@
 %define basever 2.6.27
 %define postver .3
+%define alt_kernel uml
 Summary:	User Mode Linux
 Summary(pl.UTF-8):	Linux w przestrzeni użytkownika
 Name:		umlinux
@@ -19,6 +20,24 @@ Source4:	%{name}-etc-umltab
 Source5:	%{name}-rc-init
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_localversion %{release}
+%define         kernel_release %{version}-%{alt_kernel}-%{_localversion}
+
+%define         defconfig       arch/um/defconfig
+
+# No ELF objects there to strip (skips processing 27k files)
+%define         _noautostrip    .*%{_kernelsrcdir}/.*
+%define         _noautochrpath  .*%{_kernelsrcdir}/.*
+
+%define         topdir          %{_builddir}/%{name}-%{version}
+%define         srcdir          %{topdir}/linux-%{basever}
+
+%define         CommonOpts      HOSTCC="%{kgcc}" HOSTCFLAGS="-Wall -Wstrict-prototypes %{rpmcflags} -fomit-frame-pointer"
+%define		MakeOpts	%{CommonOpts} ARCH=um CC="%{kgcc}" LDFLAGS=-L/lib
+%define		DepMod		/bin/true
+
+%define CrossOpts ARCH=um LDFLAGS=-L/lib CC="%{__cc}"
 
 %description
 User Mode Linux.
@@ -52,17 +71,93 @@ Automagiczy start/stop Linuksa w przestrzeni użytkownika.
 %setup -qc
 
 cd linux-%{basever}
+
 %if "%{postver}" != "%{nil}"
-%{__bzip2} -dc %{SOURCE1} | %{__patch} -p1 -s
+%{__bzip2} -dc %{SOURCE1} | patch -p1 -s
 %endif
 
-cp %{SOURCE2} ./.config
-cp %{SOURCE3} .
+# Fix EXTRAVERSION in main Makefile
+sed -i 's#EXTRAVERSION =.*#EXTRAVERSION = %{postver}-%{alt_kernel}#g' Makefile
+
+# cleanup backups after patching
+find '(' -name '*~' -o -name '*.orig' -o -name '.gitignore' ')' -print0 | xargs -0 -r -l512 rm -f
+
+cp %SOURCE3 .
 
 %build
+
 cd linux-%{basever}
-#%{__make} ARCH=um oldconfig
-%{__make} ARCH=um LDFLAGS=-L/lib
+
+BuildConfig() {
+	%{?debug:set -x}
+	# is this a special kernel we want to build?
+	KernelVer=%{kernel_release}
+	cat $RPM_SOURCE_DIR/umlinux-config > %{defconfig}
+
+%{?debug:sed -i "s:# CONFIG_DEBUG_SLAB is not set:CONFIG_DEBUG_SLAB=y:" %{defconfig}}
+%{?debug:sed -i "s:# CONFIG_DEBUG_PREEMPT is not set:CONFIG_DEBUG_PREEMPT=y:" %{defconfig}}
+%{?debug:sed -i "s:# CONFIG_RT_DEADLOCK_DETECT is not set:CONFIG_RT_DEADLOCK_DETECT=y:" %{defconfig}}
+
+}
+
+BuildKernel() {
+	%{?debug:set -x}
+	echo "Building kernel $1 ..."
+	%{__make} %CrossOpts mrproper \
+		RCS_FIND_IGNORE='-name build-done -prune -o'
+	ln -sf %{defconfig} .config
+
+	%{__make} %CrossOpts clean \
+		RCS_FIND_IGNORE='-name build-done -prune -o'
+	%{__make} %CrossOpts include/linux/version.h \
+		%{?with_verbose:V=1}
+
+	%{__make} %CrossOpts scripts/mkcompile_h \
+		%{?with_verbose:V=1}
+
+	%{__make} %CrossOpts \
+		%{?with_verbose:V=1}
+}
+
+PreInstallKernel() {
+	%{__make} %CrossOpts modules_install \
+		%{?with_verbose:V=1} \
+		DEPMOD=%DepMod \
+		INSTALL_MOD_PATH=$KERNEL_INSTALL_DIR \
+		KERNELRELEASE=$KernelVer
+
+	# You'd probabelly want to make it somewhat different
+	install -d $KERNEL_INSTALL_DIR%{_kernelsrcdir}
+	install Module.symvers $KERNEL_INSTALL_DIR%{_kernelsrcdir}/Module.symvers-dist
+
+	echo "CHECKING DEPENDENCIES FOR KERNEL MODULES"
+	if [ %DepMod = /sbin/depmod ]; then
+		/sbin/depmod --basedir $KERNEL_INSTALL_DIR -ae -F $KERNEL_INSTALL_DIR/boot/System.map-$KernelVer -r $KernelVer || :
+	fi
+	touch $KERNEL_INSTALL_DIR/lib/modules/$KernelVer/modules.dep
+	echo "KERNEL RELEASE $KernelVer DONE"
+}
+
+KERNEL_BUILD_DIR=`pwd`
+
+KERNEL_INSTALL_DIR="$KERNEL_BUILD_DIR/build-done/kernel"
+rm -rf $KERNEL_INSTALL_DIR
+BuildConfig
+ln -sf %{defconfig} .config
+install -d $KERNEL_INSTALL_DIR%{_kernelsrcdir}/include/linux
+rm -f include/linux/autoconf.h
+%{__make} %CrossOpts include/linux/autoconf.h
+install include/linux/autoconf.h \
+	$KERNEL_INSTALL_DIR%{_kernelsrcdir}/include/linux/autoconf-dist.h
+install .config \
+	$KERNEL_INSTALL_DIR%{_kernelsrcdir}/config-dist
+BuildKernel
+PreInstallKernel
+
+%{__make} %CrossOpts include/linux/utsrelease.h
+cp include/linux/utsrelease.h{,.save}
+cp include/linux/version.h{,.save}
+cp scripts/mkcompile_h{,.save}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -70,9 +165,20 @@ install -d $RPM_BUILD_ROOT{%{_bindir},/etc/rc.d/init.d}
 install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/umltab
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/rc.d/init.d/uml
 
+install -d $RPM_BUILD_ROOT%{_prefix}/src/linux-%{version}
+install -d $RPM_BUILD_ROOT/lib/modules/%{version}-uml/misc
+
 cd linux-%{basever}
 install linux $RPM_BUILD_ROOT%{_bindir}/linux
 %{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
+
+cd %{topdir}/linux-%{basever}
+
+install -d $RPM_BUILD_ROOT%{_kernelsrcdir}/include/linux
+cp -a  Module.symvers $RPM_BUILD_ROOT%{_kernelsrcdir}/Module.symvers-dist
+cp -aL .config $RPM_BUILD_ROOT%{_kernelsrcdir}/config-dist
+cp -a  include/linux/autoconf.h $RPM_BUILD_ROOT%{_kernelsrcdir}/include/linux/autoconf-dist.h
+cp -a  include/linux/{utsrelease,version}.h $RPM_BUILD_ROOT%{_kernelsrcdir}/include/linux
 
 %post modules
 %depmod %{version}
@@ -90,9 +196,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files modules
 %defattr(644,root,root,755)
-/lib/modules/%{basever}%{postver}
+/lib/modules/%{version}-uml
 
 %files init
 %defattr(644,root,root,755)
 %attr(754,root,root) /etc/rc.d/init.d/uml
 %{_sysconfdir}/umltab
+
+# %files doc
+# %defattr(644,root,root,755)
+# %{_prefix}/src/linux-%{version}/Documentation
