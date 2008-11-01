@@ -14,8 +14,8 @@ Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{basever}.tar.bz2
 Source1:	http://www.kernel.org/pub/linux/kernel/v2.6/patch-%{version}.bz2
 # Source1-md5:	fa7cb6cf1ee5e796e89905806ffc6f01
 Source2:	%{name}-config
-Source3:	%{name}-etc-umltab
-Source4:	%{name}-rc-init
+# Source3:	%{name}-etc-umltab
+# Source4:	%{name}-rc-init
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -23,10 +23,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define         kernel_release %{version}-%{alt_kernel}-%{_localversion}
 
 %define         defconfig       arch/um/defconfig
-
-# No ELF objects there to strip (skips processing 27k files)
-%define         _noautostrip    .*%{_kernelsrcdir}/.*
-%define         _noautochrpath  .*%{_kernelsrcdir}/.*
 
 %define         topdir          %{_builddir}/%{name}-%{version}
 %define         srcdir          %{topdir}/linux-%{basever}
@@ -155,11 +151,8 @@ cp scripts/mkcompile_h{,.save}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},/etc/rc.d/init.d}
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/umltab
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/uml
 
-install -d $RPM_BUILD_ROOT/lib/modules/%{kernel_release}/misc
+install -d $RPM_BUILD_ROOT{%{_bindir},/lib/modules/%{kernel_release}/misc}
 
 cd linux-%{basever}
 install linux $RPM_BUILD_ROOT%{_bindir}/linux
@@ -184,10 +177,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 /lib/modules/%{version}-uml
 
+%if 0
 %files init
 %defattr(644,root,root,755)
 %attr(754,root,root) /etc/rc.d/init.d/uml
 %{_sysconfdir}/umltab
+%endif
 
 %if 0
 %files doc
