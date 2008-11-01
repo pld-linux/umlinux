@@ -1,5 +1,5 @@
 %define basever 2.6.27
-%define postver .3
+%define postver .4
 %define alt_kernel uml
 Summary:	User Mode Linux
 Summary(pl.UTF-8):	Linux w przestrzeni użytkownika
@@ -10,14 +10,12 @@ Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
 Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{basever}.tar.bz2
-# Source0-md5:  b3e78977aa79d3754cb7f8143d7ddabd
+# Source0-md5:	b3e78977aa79d3754cb7f8143d7ddabd
 Source1:	http://www.kernel.org/pub/linux/kernel/v2.6/patch-%{version}.bz2
-# Source1-md5:  4f0dc89b4989619c616d40507b5f7f34
+# Source1-md5:	fa7cb6cf1ee5e796e89905806ffc6f01
 Source2:	%{name}-config
-Source3:	http://user-mode-linux.sourceforge.net/UserModeLinux-HOWTO.html
-# Source3-md5:	781dc3611ebf60ac07814a1cd31c936d
-Source4:	%{name}-etc-umltab
-Source5:	%{name}-rc-init
+Source3:	%{name}-etc-umltab
+Source4:	%{name}-rc-init
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -82,16 +80,12 @@ sed -i 's#EXTRAVERSION =.*#EXTRAVERSION = %{postver}-%{alt_kernel}#g' Makefile
 # cleanup backups after patching
 find '(' -name '*~' -o -name '*.orig' -o -name '.gitignore' ')' -print0 | xargs -0 -r -l512 rm -f
 
-cp %SOURCE3 .
-
 %build
 
 cd linux-%{basever}
 
 BuildConfig() {
 	%{?debug:set -x}
-	# is this a special kernel we want to build?
-	KernelVer=%{kernel_release}
 	cat $RPM_SOURCE_DIR/umlinux-config > %{defconfig}
 
 %{?debug:sed -i "s:# CONFIG_DEBUG_SLAB is not set:CONFIG_DEBUG_SLAB=y:" %{defconfig}}
@@ -124,7 +118,7 @@ PreInstallKernel() {
 		%{?with_verbose:V=1} \
 		DEPMOD=%DepMod \
 		INSTALL_MOD_PATH=$KERNEL_INSTALL_DIR \
-		KERNELRELEASE=$KernelVer
+		KERNELRELEASE=%{kernel_release}
 
 	# You'd probabelly want to make it somewhat different
 	install -d $KERNEL_INSTALL_DIR%{_kernelsrcdir}
@@ -132,10 +126,10 @@ PreInstallKernel() {
 
 	echo "CHECKING DEPENDENCIES FOR KERNEL MODULES"
 	if [ %DepMod = /sbin/depmod ]; then
-		/sbin/depmod --basedir $KERNEL_INSTALL_DIR -ae -F $KERNEL_INSTALL_DIR/boot/System.map-$KernelVer -r $KernelVer || :
+		/sbin/depmod --basedir $KERNEL_INSTALL_DIR -ae -F $KERNEL_INSTALL_DIR/boot/System.map-%{kernel_release} -r %{kernel_release} || :
 	fi
-	touch $KERNEL_INSTALL_DIR/lib/modules/$KernelVer/modules.dep
-	echo "KERNEL RELEASE $KernelVer DONE"
+	touch $KERNEL_INSTALL_DIR/lib/modules/%{kernel_release}/modules.dep
+	echo "KERNEL RELEASE %{kernel_release} DONE"
 }
 
 KERNEL_BUILD_DIR=`pwd`
@@ -162,23 +156,16 @@ cp scripts/mkcompile_h{,.save}
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},/etc/rc.d/init.d}
-install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/umltab
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/rc.d/init.d/uml
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/umltab
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/rc.d/init.d/uml
 
-install -d $RPM_BUILD_ROOT%{_prefix}/src/linux-%{version}
-install -d $RPM_BUILD_ROOT/lib/modules/%{version}-uml/misc
+install -d $RPM_BUILD_ROOT/lib/modules/%{kernel_release}/misc
 
 cd linux-%{basever}
 install linux $RPM_BUILD_ROOT%{_bindir}/linux
 %{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
 
 cd %{topdir}/linux-%{basever}
-
-install -d $RPM_BUILD_ROOT%{_kernelsrcdir}/include/linux
-cp -a  Module.symvers $RPM_BUILD_ROOT%{_kernelsrcdir}/Module.symvers-dist
-cp -aL .config $RPM_BUILD_ROOT%{_kernelsrcdir}/config-dist
-cp -a  include/linux/autoconf.h $RPM_BUILD_ROOT%{_kernelsrcdir}/include/linux/autoconf-dist.h
-cp -a  include/linux/{utsrelease,version}.h $RPM_BUILD_ROOT%{_kernelsrcdir}/include/linux
 
 %post modules
 %depmod %{version}
@@ -191,7 +178,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc linux-%{basever}/UserModeLinux-HOWTO.html
 %attr(755,root,root) %{_bindir}/linux
 
 %files modules
