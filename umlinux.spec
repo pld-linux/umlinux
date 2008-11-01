@@ -24,8 +24,8 @@ Source2:	%{name}-config
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_localversion %{release}
-%define         kernel_release %{version}-%{alt_kernel}-%{_localversion}
+%define		localversion %{release}
+%define         kernel_release %{version}-%{alt_kernel}-%{localversion}
 
 %define         defconfig       arch/um/defconfig
 
@@ -134,6 +134,7 @@ PreInstallKernel() {
 }
 
 KERNEL_BUILD_DIR=`pwd`
+echo "-%{localversion}" > localversion
 
 KERNEL_INSTALL_DIR="$KERNEL_BUILD_DIR/build-done/kernel"
 rm -rf $KERNEL_INSTALL_DIR
@@ -161,7 +162,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},/lib/modules/%{kernel_release}/misc}
 
 cd linux-%{basever}
 install linux $RPM_BUILD_ROOT%{_bindir}/linux
-%{__make} ARCH=um modules_install  INSTALL_MOD_PATH=$RPM_BUILD_ROOT
+%{__make} ARCH=um modules_install INSTALL_MOD_PATH=$RPM_BUILD_ROOT
 
 cd %{topdir}/linux-%{basever}
 
@@ -180,7 +181,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files modules
 %defattr(644,root,root,755)
-/lib/modules/%{version}-uml
+/lib/modules/%{kernel_release}
 
 %if 0
 %files init
