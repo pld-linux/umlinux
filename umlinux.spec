@@ -1,3 +1,8 @@
+# TODO
+# - rewrite init script
+# - does it make sens to package module-build for umlinux? Is it possible?
+# - package docs
+
 %define basever 2.6.27
 %define postver .4
 %define alt_kernel uml
