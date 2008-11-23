@@ -1,6 +1,5 @@
 # TODO
 # - does it make sens to package module-build for umlinux? Is it possible?
-# - package docs
 
 %define basever 2.6.27
 %define postver .7
@@ -33,6 +32,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		MakeOpts	%{CommonOpts} ARCH=um CC="%{kgcc}" LDFLAGS=-L/lib
 %define		DepMod		/bin/true
 
+%define         _kernelsrcdir   /usr/src/linux-%{version}-%{alt_kernel}
+
 %define CrossOpts ARCH=um LDFLAGS=-L/lib CC="%{__cc}"
 
 %description
@@ -51,6 +52,17 @@ Modules for User Mode Linux.
 
 %description modules -l pl.UTF-8
 Moduły Linuksa w przestrzeni użytkownika.
+
+%package doc
+Summary:	Linux documentaion
+Summary(pl.UTF-8):	Dokumentacja Linuksa
+Group:		Documentation
+
+%description doc
+Linux documentation.
+
+%description doc -l pl.UTF-8
+Dokumentacja systemu Linux.
 
 %prep
 %setup -qc
@@ -144,11 +156,13 @@ cp scripts/mkcompile_h{,.save}
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{%{_bindir},/lib/modules/%{kernel_release}/misc}
+install -d $RPM_BUILD_ROOT{%{_bindir},/lib/modules/%{kernel_release}/misc,%{_kernelsrcdir}}
 
 cd linux-%{basever}
 install linux $RPM_BUILD_ROOT%{_bindir}/linux
 %{__make} ARCH=um modules_install INSTALL_MOD_PATH=$RPM_BUILD_ROOT
+
+cp -a Documentation $RPM_BUILD_ROOT%{_kernelsrcdir}/Documentation
 
 cd %{topdir}/linux-%{basever}
 
@@ -174,8 +188,6 @@ rm -rf $RPM_BUILD_ROOT
 %ghost /lib/modules/%{kernel_release}/source
 %endif
 
-%if 0
 %files doc
 %defattr(644,root,root,755)
-%{_prefix}/src/linux-%{version}/Documentation
-%endif
+%{_kernelsrcdir}/Documentation
