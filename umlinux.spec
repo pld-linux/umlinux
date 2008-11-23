@@ -1,5 +1,4 @@
 # TODO
-# - rewrite init script
 # - does it make sens to package module-build for umlinux? Is it possible?
 # - package docs
 
@@ -19,8 +18,6 @@ Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{basever}.tar.bz2
 Source1:	http://www.kernel.org/pub/linux/kernel/v2.6/patch-%{version}.bz2
 # Source1-md5:	1d0e83c620f3960d4d1e813f186b39f6
 Source2:	%{name}-config
-# Source3:	%{name}-etc-umltab
-# Source4:	%{name}-rc-init
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -54,17 +51,6 @@ Modules for User Mode Linux.
 
 %description modules -l pl.UTF-8
 Moduły Linuksa w przestrzeni użytkownika.
-
-%package init
-Summary:	Automagic startup/shutdown User Mode Linux
-Summary(pl.UTF-8):	Automagiczy start/stop Linuksa w przestrzeni użytkownika
-Group:		Applications/Emulators
-
-%description init
-Utilities for automagic startup/shutdown User Mode Linux.
-
-%description init -l pl.UTF-8
-Automagiczy start/stop Linuksa w przestrzeni użytkownika.
 
 %prep
 %setup -qc
@@ -186,13 +172,6 @@ rm -rf $RPM_BUILD_ROOT
 # symlinks pointing to kernelsrcdir
 %ghost /lib/modules/%{kernel_release}/build
 %ghost /lib/modules/%{kernel_release}/source
-%endif
-
-%if 0
-%files init
-%defattr(644,root,root,755)
-%attr(754,root,root) /etc/rc.d/init.d/uml
-%{_sysconfdir}/umltab
 %endif
 
 %if 0
