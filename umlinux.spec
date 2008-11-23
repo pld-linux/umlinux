@@ -4,7 +4,7 @@
 # - package docs
 
 %define basever 2.6.27
-%define postver .4
+%define postver .7
 %define alt_kernel uml
 Summary:	User Mode Linux
 Summary(pl.UTF-8):	Linux w przestrzeni użytkownika
@@ -17,7 +17,7 @@ Group:		Applications/Emulators
 Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{basever}.tar.bz2
 # Source0-md5:	b3e78977aa79d3754cb7f8143d7ddabd
 Source1:	http://www.kernel.org/pub/linux/kernel/v2.6/patch-%{version}.bz2
-# Source1-md5:	fa7cb6cf1ee5e796e89905806ffc6f01
+# Source1-md5:	1d0e83c620f3960d4d1e813f186b39f6
 Source2:	%{name}-config
 # Source3:	%{name}-etc-umltab
 # Source4:	%{name}-rc-init
