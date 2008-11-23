@@ -167,10 +167,7 @@ install linux $RPM_BUILD_ROOT%{_bindir}/linux
 cd %{topdir}/linux-%{basever}
 
 %post modules
-%depmod %{version}
-
-%postun modules
-%depmod %{version}
+%depmod %{kernel_release}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -181,7 +178,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files modules
 %defattr(644,root,root,755)
-/lib/modules/%{kernel_release}
+%dir /lib/modules/%{kernel_release}
+/lib/modules/%{kernel_release}/kernel
+/lib/modules/%{kernel_release}/misc
+%ghost /lib/modules/%{kernel_release}/modules.*
+%if 0
+# symlinks pointing to kernelsrcdir
+%ghost /lib/modules/%{kernel_release}/build
+%ghost /lib/modules/%{kernel_release}/source
+%endif
 
 %if 0
 %files init
