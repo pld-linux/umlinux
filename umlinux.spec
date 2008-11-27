@@ -88,6 +88,7 @@ BuildConfig() {
 	cat $RPM_SOURCE_DIR/umlinux-config > %{defconfig}
 
 %{?debug:sed -i "s:# CONFIG_DEBUG_SLAB is not set:CONFIG_DEBUG_SLAB=y:" %{defconfig}}
+%{?debug:sed -i "s:# CONFIG_DEBUG_SLAB_LEAK is not set:CONFIG_DEBUG_SLAB_LEAK=y:" %{defconfig}}
 %{?debug:sed -i "s:# CONFIG_DEBUG_PREEMPT is not set:CONFIG_DEBUG_PREEMPT=y:" %{defconfig}}
 %{?debug:sed -i "s:# CONFIG_RT_DEADLOCK_DETECT is not set:CONFIG_RT_DEADLOCK_DETECT=y:" %{defconfig}}
 
