@@ -72,7 +72,7 @@ Dokumentacja systemu Linux.
 
 cd linux-%{patch_baseline}
 
-%if "%{postver}" != "%{nil}"
+%if "%{postver}%{rcver}" != "%{nil}"
 %{__bzip2} -dc %{SOURCE1} | patch -p1 -s
 %endif
 
