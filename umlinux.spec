@@ -1,5 +1,5 @@
 # TODO
-# - does it make sens to package module-build for umlinux? Is it possible?
+# - module-build and source subpackages
 
 %define basever 2.6.27
 %define postver .7
