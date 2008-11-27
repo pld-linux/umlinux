@@ -1,21 +1,24 @@
 # TODO
 # - does it make sens to package module-build for umlinux? Is it possible?
 
-%define basever 2.6.27
-%define postver .7
+%define basever 2.6.28
+%define postver %{nil}
+%define patch_baseline 2.6.27
+%define rcver rc6
+
 %define alt_kernel uml
 Summary:	User Mode Linux
 Summary(pl.UTF-8):	Linux w przestrzeni użytkownika
 Name:		umlinux
 Version:	%{basever}%{postver}
-Release:	0.1
+Release:	0.%{rcver}.1
 Epoch:		0
 License:	GPL
 Group:		Applications/Emulators
-Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{basever}.tar.bz2
+Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{patch_baseline}.tar.bz2
 # Source0-md5:	b3e78977aa79d3754cb7f8143d7ddabd
-Source1:	http://www.kernel.org/pub/linux/kernel/v2.6/patch-%{version}.bz2
-# Source1-md5:	1d0e83c620f3960d4d1e813f186b39f6
+Source1:	http://www.kernel.org/pub/linux/kernel/v2.6/testing/patch-%{version}-%{rcver}.bz2
+# Source1-md5:	e7f1360407ee89d6e64038330d664c8f
 Source2:	%{name}-config
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -32,7 +35,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		MakeOpts	%{CommonOpts} ARCH=um CC="%{kgcc}" LDFLAGS=-L/lib
 %define		DepMod		/bin/true
 
-%define         _kernelsrcdir   /usr/src/linux-%{version}-%{alt_kernel}
+%define         _kernelsrcdir   /usr/src/linux-%{version}-%{rcver}-%{alt_kernel}
 
 %define CrossOpts ARCH=um LDFLAGS=-L/lib CC="%{__cc}"
 
@@ -67,7 +70,7 @@ Dokumentacja systemu Linux.
 %prep
 %setup -qc
 
-cd linux-%{basever}
+cd linux-%{patch_baseline}
 
 %if "%{postver}" != "%{nil}"
 %{__bzip2} -dc %{SOURCE1} | patch -p1 -s
@@ -81,7 +84,7 @@ find '(' -name '*~' -o -name '*.orig' -o -name '.gitignore' ')' -print0 | xargs 
 
 %build
 
-cd linux-%{basever}
+cd linux-%{patch_baseline}
 
 BuildConfig() {
 	%{?debug:set -x}
@@ -159,13 +162,13 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT{%{_bindir},/lib/modules/%{kernel_release}/misc,%{_kernelsrcdir}}
 
-cd linux-%{basever}
+cd linux-%{patch_baseline}
 install linux $RPM_BUILD_ROOT%{_bindir}/linux
 %{__make} ARCH=um modules_install INSTALL_MOD_PATH=$RPM_BUILD_ROOT
 
 cp -a Documentation $RPM_BUILD_ROOT%{_kernelsrcdir}/Documentation
 
-cd %{topdir}/linux-%{basever}
+cd %{topdir}/linux-%{patch_baseline}
 
 %post modules
 %depmod %{kernel_release}
