@@ -1,5 +1,13 @@
 # TODO
 # - module-build and source subpackages
+# - does not build:
+#   LD      .tmp_vmlinux1
+#   /usr/bin/ld:arch/um/kernel/vmlinux.lds:1: ignoring invalid character `#' in expression
+#   /usr/bin/ld:arch/um/kernel/vmlinux.lds:1: syntax error
+#   collect2: ld returned 1 exit status
+#     KSYM    .tmp_kallsyms1.S
+#   nm: '.tmp_vmlinux1': No such file
+#   No valid symbol.
 
 %define basever 2.6.27
 %define postver .25
