@@ -2,7 +2,7 @@
 # - module-build and source subpackages
 
 %define basever 2.6.27
-%define postver .7
+%define postver .25
 %define alt_kernel uml
 Summary:	User Mode Linux
 Summary(pl.UTF-8):	Linux w przestrzeni użytkownika
@@ -15,7 +15,7 @@ Group:		Applications/Emulators
 Source0:	http://www.kernel.org/pub/linux/kernel/v2.6/linux-%{basever}.tar.bz2
 # Source0-md5:	b3e78977aa79d3754cb7f8143d7ddabd
 Source1:	http://www.kernel.org/pub/linux/kernel/v2.6/patch-%{version}.bz2
-# Source1-md5:	1d0e83c620f3960d4d1e813f186b39f6
+# Source1-md5:	53981d997d85d4a65e086fd1cada61a0
 Source2:	%{name}-config
 URL:		http://user-mode-linux.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
